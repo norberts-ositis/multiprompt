@@ -1,3 +1,6 @@
+# TL;DR
+Send the same prompt to multiple AI models. Learning Claude Code and quick prototyping with full API connectivity, Google user authentication and more.
+
 # MultiPrompt — Phase 1
 
 Send one prompt to every AI simultaneously. Compare, contrast, resolve.
