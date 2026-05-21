@@ -1,0 +1,56 @@
+
+# ======================
+# Environment / secrets
+# ======================
+.env
+.env.*
+!.env.example
+
+# ======================
+# Composer dependencies
+# ======================
+vendor/
+
+# ======================
+# Archives / exports
+# ======================
+*.zip
+
+# ======================
+# Logs & runtime files
+# ======================
+*.log
+logs/
+storage/
+cache/
+tmp/
+
+# ======================
+# OS junk
+# ======================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ======================
+# Editor / IDE
+# ======================
+.vscode/
+.idea/
+*.swp
+
+# ======================
+# Invalid Claude artifact folders
+# ======================
+\{public*
+\{css*
+\{js*
+\{img*
+\{Auth*
+\{Api*
+\{Database*
+
+# ======================
+# Git internals (safety)
+# ======================
+.git/

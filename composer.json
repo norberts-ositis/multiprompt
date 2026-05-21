@@ -1,0 +1,16 @@
+{
+  "name": "multiprompt/app",
+  "description": "MultiPrompt — compare every AI simultaneously",
+  "type": "project",
+  "require": {
+    "php": ">=8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "MultiPrompt\\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}

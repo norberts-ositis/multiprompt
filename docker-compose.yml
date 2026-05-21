@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  app:
+    image: php:8.2-apache
+    container_name: multiprompt_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/apache.conf:/etc/apache2/sites-enabled/000-default.conf
+    environment:
+      APP_ENV: development
+      APP_URL: http://localhost:8080
+      FRONTEND_URL: http://localhost:8080
+      ENCRYPT_KEY: ${ENCRYPT_KEY}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: multiprompt
+      DB_USER: multiprompt
+      DB_PASS: ${DB_PASS}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      bash -c "
+        apt-get update -q && apt-get install -y -q libzip-dev unzip curl &&
+        docker-php-ext-install pdo pdo_mysql &&
+        a2enmod rewrite headers &&
+        curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer &&
+        cd /var/www/html && composer install --no-interaction --quiet &&
+        apache2-foreground
+      "
+
+  db:
+    image: mysql:8.0
+    container_name: multiprompt_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: multiprompt
+      MYSQL_USER: multiprompt
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./migrations/001_phase1.sql:/docker-entrypoint-initdb.d/001_phase1.sql
+      - ./migrations/002_phase2.sql:/docker-entrypoint-initdb.d/002_phase2.sql
+      - ./migrations/003_phase3.sql:/docker-entrypoint-initdb.d/003_phase3.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  db_data:
